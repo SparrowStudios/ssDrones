@@ -1,0 +1,27 @@
+name: "[SparrowStudios] Template Repo CI"
+
+on:
+  push:
+    branches:
+      - "master"
+      - "develop"
+      - "feature/**"
+  pull_request:
+    branches:
+      - "master"
+      - "develop"
+      - "feature/**"
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 7.0.306
+    - name: Build with dotnet
+      run: dotnet build

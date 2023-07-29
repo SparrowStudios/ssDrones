@@ -1,0 +1,47 @@
+name: "[SparrowStudios] Discord Webhook"
+
+on:
+  workflow_run:
+    workflows:
+      - \[SparrowStudios\] Template Repo CI
+    types:
+      - completed
+
+jobs:
+  workflowSuccess:
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Execute request
+        run: |
+          $runTime = ([timespan]::fromseconds(((Invoke-WebRequest -Uri https://api.github.com/repos/SparrowStudios/${{ github.event.workflow_run.repository.name }}/actions/runs/${{ github.event.workflow_run.id }}/timing -ContentType "application/json" -Method Get -UseBasicParsing).Content | Out-String | ConvertFrom-Json).run_duration_ms / 1000).ToString("mm\:ss"))
+          Invoke-WebRequest -Uri "http://localhost:3000/workflow/success" -Method "POST" -UseBasicParsing -ContentType "application/json" -Body (@{ 
+            "branchName" = "${{ github.event.workflow_run.head_branch }}"
+            "commitMessage" = "${{ github.event.workflow_run.head_commit.message }}"
+            "actorName" = "${{ github.event.workflow_run.actor.login }}"
+            "actorAvatarUrl" = "${{ github.event.workflow_run.actor.avatar_url }}"
+            "runTime" = "${runTime}"
+            "runNumber" = "${{ github.event.workflow_run.run_number }}"
+            "timestamp" = "${{ github.event.workflow_run.updated_at }}"
+            "repoName" = "${{ github.event.repository.name }}"
+          } | ConvertTo-Json)
+
+  workflowFail:
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
+    steps:
+      - name: Execute request
+        run: |
+          $runTime = ([timespan]::fromseconds(((Invoke-WebRequest -Uri https://api.github.com/repos/SparrowStudios/${{ github.event.workflow_run.repository.name }}/actions/runs/${{ github.event.workflow_run.id }}/timing -ContentType "application/json" -Method Get -UseBasicParsing).Content | Out-String | ConvertFrom-Json).run_duration_ms / 1000).ToString("mm\:ss"))
+          Invoke-WebRequest -Uri "http://localhost:3000/workflow/failure" -Method "POST" -UseBasicParsing -ContentType "application/json" -Body (@{ 
+            "branchName" = "${{ github.event.workflow_run.head_branch }}"
+            "commitMessage" = "${{ github.event.workflow_run.head_commit.message }}"
+            "actorName" = "${{ github.event.workflow_run.actor.login }}"
+            "actorAvatarUrl" = "${{ github.event.workflow_run.actor.avatar_url }}"
+            "runTime" = "${runTime}"
+            "runNumber" = "${{ github.event.workflow_run.run_number }}"
+            "timestamp" = "${{ github.event.workflow_run.updated_at }}"
+            "repoName" = "${{ github.event.repository.name }}"
+          } | ConvertTo-Json)
