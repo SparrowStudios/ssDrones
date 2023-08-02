@@ -47,27 +47,27 @@ namespace SparrowStudios.Fivem.ssDrones
         {
             public static class Movement
             {
-                public static DroneControl FORWARD = new DroneControl("Forward", (int)GameControls.INPUT_MOVE_UP_ONLY);
-                public static DroneControl BACKWARDS = new DroneControl("Backwards", (int)GameControls.INPUT_MOVE_DOWN_ONLY);
-                public static DroneControl LEFT = new DroneControl("Left", (int)GameControls.INPUT_MOVE_LEFT_ONLY);
-                public static DroneControl RIGHT = new DroneControl("Right", (int)GameControls.INPUT_MOVE_RIGHT_ONLY);
-                public static DroneControl DOWN = new DroneControl("Down", (int)GameControls.INPUT_SPRINT);
-                public static DroneControl UP = new DroneControl("Up", (int)GameControls.INPUT_JUMP);
+                public static DroneControl FORWARD = new DroneControl("Move Forward", (int)GameControls.INPUT_MOVE_UP_ONLY);
+                public static DroneControl BACKWARDS = new DroneControl("Move Backwards", (int)GameControls.INPUT_MOVE_DOWN_ONLY);
+                public static DroneControl LEFT = new DroneControl("Move Left", (int)GameControls.INPUT_MOVE_LEFT_ONLY);
+                public static DroneControl RIGHT = new DroneControl("Move Right", (int)GameControls.INPUT_MOVE_RIGHT_ONLY);
+                public static DroneControl DOWN = new DroneControl("Move Down", (int)GameControls.INPUT_SPRINT);
+                public static DroneControl UP = new DroneControl("Move Up", (int)GameControls.INPUT_JUMP);
             }
 
             public static class Camera
             {
-                public static DroneControl UP = new DroneControl("Up", (int)GameControls.INPUT_VEH_FLY_PITCH_UP_ONLY);
-                public static DroneControl DOWN = new DroneControl("Down", (int)GameControls.INPUT_VEH_FLY_PITCH_UP_ONLY);
-                public static DroneControl LEFT = new DroneControl("Left", (int)GameControls.INPUT_VEH_FLY_ROLL_LEFT_ONLY);
-                public static DroneControl RIGHT = new DroneControl("Right", (int)GameControls.INPUT_VEH_FLY_ROLL_RIGHT_ONLY);
-                public static DroneControl CENTER = new DroneControl("Center", (int)GameControls.INPUT_FRONTEND_DELETE);
+                public static DroneControl UP = new DroneControl("Camera Up", (int)GameControls.INPUT_VEH_FLY_PITCH_UP_ONLY);
+                public static DroneControl DOWN = new DroneControl("Camera Down", (int)GameControls.INPUT_VEH_FLY_PITCH_UP_ONLY);
+                public static DroneControl LEFT = new DroneControl("Camera Left", (int)GameControls.INPUT_VEH_FLY_ROLL_LEFT_ONLY);
+                public static DroneControl RIGHT = new DroneControl("Camera Right", (int)GameControls.INPUT_VEH_FLY_ROLL_RIGHT_ONLY);
+                public static DroneControl CENTER = new DroneControl("Camera Center", (int)GameControls.INPUT_FRONTEND_DELETE);
             }
 
             public static class Heading
             {
-                public static DroneControl RIGHT = new DroneControl("Right", (int)GameControls.INPUT_CONTEXT);
-                public static DroneControl LEFT = new DroneControl("Left", (int)GameControls.INPUT_CONTEXT_SECONDARY);
+                public static DroneControl RIGHT = new DroneControl("Heading Right", (int)GameControls.INPUT_CONTEXT);
+                public static DroneControl LEFT = new DroneControl("Heading Left", (int)GameControls.INPUT_CONTEXT_SECONDARY);
             }
 
             public static class Zoom

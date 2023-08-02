@@ -46,6 +46,8 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         #endregion
 
         #region Functions
+        private static void Log(string message) => Debug.WriteLine($"[ssDrones] {message}");
+
         private async Task SpawnDrone(Drone drone)
         {
             // Fade the screen
@@ -125,6 +127,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Forward
                 if (IsDisabledControlPressed(0, Controls.Movement.FORWARD.KeyIndex))
                 {
+                    Log($"{Controls.Movement.FORWARD.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum + (forward * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -133,6 +136,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Backwards
                 if (IsDisabledControlPressed(0, Controls.Movement.BACKWARDS.KeyIndex))
                 {
+                    Log($"{Controls.Movement.BACKWARDS.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum - (forward * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -141,6 +145,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Left
                 if (IsDisabledControlPressed(0, Controls.Movement.LEFT.KeyIndex))
                 {
+                    Log($"{Controls.Movement.LEFT.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum - (right * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -149,6 +154,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Right
                 if (IsDisabledControlPressed(0, Controls.Movement.RIGHT.KeyIndex))
                 {
+                    Log($"{Controls.Movement.RIGHT.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum + (right * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -157,6 +163,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Down
                 if (IsDisabledControlPressed(0, Controls.Movement.DOWN.KeyIndex))
                 {
+                    Log($"{Controls.Movement.DOWN.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum - (up * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -165,6 +172,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Up
                 if (IsDisabledControlPressed(0, Controls.Movement.UP.KeyIndex))
                 {
+                    Log($"{Controls.Movement.UP.Label} pushed");
                     movementMomentum = V3Utils.ClampMagnitude(movementMomentum + (up * drone.Agility), maxBoost);
                     didMove = true;
                 }
@@ -177,6 +185,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Up
                 if (IsDisabledControlPressed(0, Controls.Camera.UP.KeyIndex))
                 {
+                    Log($"{Controls.Camera.UP.Label} pushed");
                     cameraRotation = cameraRotation + (new Vector3(1.0f, 0.0f, 0.0f) / Math.Max(2, zoom));
                 }
                 #endregion
@@ -184,6 +193,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Down
                 if (IsDisabledControlPressed(0, Controls.Camera.DOWN.KeyIndex))
                 {
+                    Log($"{Controls.Camera.DOWN.Label} pushed");
                     cameraRotation = cameraRotation - (new Vector3(1.0f, 0.0f, 0.0f) / Math.Max(2, zoom));
                 }
                 #endregion
@@ -191,6 +201,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Left
                 if (IsDisabledControlPressed(0, Controls.Camera.LEFT.KeyIndex))
                 {
+                    Log($"{Controls.Camera.LEFT.Label} pushed");
                     cameraRotation = cameraRotation + (new Vector3(0.0f, 0.0f, 1.0f) / Math.Max(2, zoom));
                 }
                 #endregion
@@ -198,6 +209,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Move Right
                 if (IsDisabledControlPressed(0, Controls.Camera.RIGHT.KeyIndex))
                 {
+                    Log($"{Controls.Camera.RIGHT.Label} pushed");
                     cameraRotation = cameraRotation - (new Vector3(0.0f, 0.0f, 1.0f) / Math.Max(2, zoom));
                 }
                 #endregion
@@ -205,6 +217,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Center Camera
                 if (IsDisabledControlPressed(0, Controls.Camera.CENTER.KeyIndex))
                 {
+                    Log($"{Controls.Camera.CENTER.Label} pushed");
                     cameraRotation = Vector3.Zero;
                 }
                 #endregion
@@ -215,20 +228,22 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlPressed(0, Controls.Heading.RIGHT.KeyIndex))
                 {
                     rotationMomentum = (float) Math.Max(-1.5, rotationMomentum - 0.02);
+                    Log($"{Controls.Heading.RIGHT.Label} pushed (Rot Momentum: {rotationMomentum})");
                 }
                 else if (IsDisabledControlPressed(0, Controls.Heading.LEFT.KeyIndex))
                 {
-                    rotationMomentum = (float)Math.Max(1.5, rotationMomentum + 0.02);
+                    rotationMomentum = (float) Math.Max(1.5, rotationMomentum + 0.02);
+                    Log($"{Controls.Heading.LEFT.Label} pushed (Rot Momentum: {rotationMomentum})");
                 }
                 else
                 {
                     if (rotationMomentum > 0.0f)
                     {
-                        rotationMomentum = (float)Math.Max(0.0, rotationMomentum - 0.04);
+                        rotationMomentum = (float) Math.Max(0.0, rotationMomentum - 0.04);
                     }
                     else if (rotationMomentum < 0.0f)
                     {
-                        rotationMomentum = (float)Math.Max(0.0, rotationMomentum + 0.04);
+                        rotationMomentum = (float) Math.Max(0.0, rotationMomentum + 0.04);
                     }
                 }
                 #endregion
@@ -238,6 +253,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Zoom Out
                 if (IsDisabledControlJustPressed(0, Controls.Zoom.OUT.KeyIndex))
                 {
+                    Log($"{Controls.Zoom.OUT.Label} pushed");
                     zoom = (float)Math.Max(0, zoom - 1);
                     SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
@@ -246,6 +262,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Zoom In
                 if (IsDisabledControlJustPressed(0, Controls.Zoom.IN.KeyIndex))
                 {
+                    Log($"{Controls.Zoom.IN.Label} pushed");
                     zoom = (float)Math.Max(4, zoom + 1);
                     SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
@@ -256,6 +273,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Toggle Nightvision
                 if (drone.HasNightVision && IsDisabledControlJustPressed(0, Controls.TOGGLE_NIGHTVISION.KeyIndex))
                 {
+                    Log($"{Controls.TOGGLE_NIGHTVISION.Label} pushed");
                     SetNightvision(!GetUsingnightvision());
                 }
                 #endregion
@@ -263,6 +281,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Toggle Infared
                 if (drone.HasInfared && IsDisabledControlJustPressed(0, Controls.TOGGLE_INFARED.KeyIndex))
                 {
+                    Log($"{Controls.TOGGLE_INFARED.Label} pushed");
                     SetSeethrough(!GetUsingseethrough());
                     SeethroughSetMaxThickness(1.0f);
                     SeethroughSetNoiseAmountMin(0.0f);
@@ -275,6 +294,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Disconnect Drone
                 if (IsDisabledControlJustReleased(0, Controls.DISCONNECT.KeyIndex))
                 {
+                    Log($"{Controls.DISCONNECT.Label} pushed");
                     drone.Disconnect();
                     await drone.DestroyCamera();
                     return;
