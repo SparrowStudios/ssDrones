@@ -1,26 +1,38 @@
 fx_version 'cerulean'
 games { 'gta5' }
 
-mono_rt2 'Prerelease expiring 2023-06-30. See https://aka.cfx.re/mono-rt2-preview for info.'
-
 author 'SparrowStudios'
-description 'Template Project'
-version '0.0.0'
+description 'A FiveM Drone Script'
+version '0.1.0'
 
 shared_scripts {
 	'Newtonsoft.Json.dll',
-	'Common.net.dll',
-	'Project.net.dll',
+	'ssDrones.net.dll',
 }
 
 client_scripts {
-	'FxEvents.Client.net.dll',
-	'Common.Client.net.dll',
-	'Project.Client.net.dll'
+	'ssDrones.Client.net.dll'
 }
 
 server_scripts {
-	'FxEvents.Server.net.dll',
-	'Common.Server.net.dll',
-	'Project.Server.net.dll'
+	'ssDrones.Server.net.dll'
 }
+
+files {
+  'stream/ch_prop_arcade_drone.ytd',
+  'stream/ch_prop_arcade_drone_01a.yft',
+  'stream/ch_prop_arcade_drone_01b.yft',
+  'stream/ch_prop_arcade_drone_01c.yft',
+  'stream/ch_prop_arcade_drone_01d.yft',
+  'stream/ch_prop_arcade_drone_01e.yft',
+  'stream/ch_prop_ch_arcade_drones.ycd',
+  'stream/ch_prop_ch_arcade_drones.ytyp',
+  'stream/ch_prop_casino_drone_01a.yft',
+  'stream/ch_prop_casino_drone_02a.yft',
+  'stream/ch_prop_casino_drone_broken01a.ydr',
+  'stream/ch_prop_ch_casino_drones.ycd',
+  'stream/ch_prop_ch_casino_drones.ytyp',
+}
+
+data_file 'DLC_ITYP_REQUEST' 'stream/ch_prop_ch_arcade_drones.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/ch_prop_ch_casino_drones.ytyp'

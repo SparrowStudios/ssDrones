@@ -1,4 +1,4 @@
-name: "[SparrowStudios] Template Repo CI"
+name: "[SparrowStudios] ssDrones CI"
 
 on:
   push:
@@ -25,3 +25,12 @@ jobs:
         dotnet-version: 7.0.306
     - name: Build with dotnet
       run: dotnet build
+    - name: Deploy to dev server
+      if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: ${{ github.workspace }}\bld
+        remote: C:\fivem-server\txData\developmentServer1\resources\[dev-scripts]
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}

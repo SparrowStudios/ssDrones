@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SparrowStudios.Fivem.Common
+namespace SparrowStudios.Fivem.ssDrones
 {
     public static class Extensions
     {

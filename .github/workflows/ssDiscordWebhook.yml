@@ -3,7 +3,7 @@ name: "[SparrowStudios] Discord Webhook"
 on:
   workflow_run:
     workflows:
-      - \[SparrowStudios\] Template Repo CI
+      - \[SparrowStudios\] ssDrones CI
     types:
       - completed
 

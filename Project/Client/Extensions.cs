@@ -1,16 +1,10 @@
-﻿#region FiveM Mono v2 Client Using Statements
-using CitizenFX.Core;
-using CitizenFX.FiveM; // FiveM game related types (client only)
-using CitizenFX.FiveM.Native; // FiveM natives (client only)
-using CitizenFX.Shared.Native; // Shared natives (there for shared libraries)
-using SharedNatives = CitizenFX.Shared.Native.Natives;
-using static CitizenFX.FiveM.Native.Natives;
-#endregion
-
+﻿using CitizenFX.Core;
+using static CitizenFX.Core.Native.API;
 using System;
 using System.Threading.Tasks;
+using SparrowStudios.Fivem.ssDrones.Models;
 
-namespace SparrowStudios.Fivem.Common.Client
+namespace SparrowStudios.Fivem.ssDrones.Client
 {
     public static class Extensions
     {
@@ -163,6 +157,103 @@ namespace SparrowStudios.Fivem.Common.Client
         {
             string[] text = GetStreetAndCrossAtCoords(pos);
             return text[1] == "" ? text[0] : string.Join(separator, GetStreetAndCrossAtCoords(pos));
+        }
+        #endregion
+
+        #region Drone Extensions
+        public static uint ModelHash(this Drone drone) => (uint) GetHashKey(drone.Model);
+
+        public static async Task<Entity> CreateObject(this Drone drone, Vector3 position)
+        {
+            // Load the drone model
+            RequestModel(drone.ModelHash());
+            while (!HasModelLoaded(drone.ModelHash())) { await BaseScript.Delay(10); }
+
+            // Check if we have a drone near us already
+            int nearbyDrone = GetClosestObjectOfType(position.X, position.Y, position.Z, 2.5f, drone.ModelHash(), false, true, true);
+            if (nearbyDrone != -1)
+            {
+                SetEntityAsMissionEntity(nearbyDrone, true, true);
+                DeleteObject(ref nearbyDrone);
+            }
+
+            // Spawn the drone object
+            int _droneObj = CitizenFX.Core.Native.API.CreateObject((int) drone.ModelHash(), position.X, position.Y, position.Z, true, true, true);
+            Entity droneObj = Entity.FromHandle(_droneObj);
+            
+            // Return
+            return droneObj;
+        }
+
+        public static async Task<Entity> CreateObject(this Drone drone, Vector4 position)
+        {
+            // Create the object
+            Entity droneObj = await drone.CreateObject(new Vector3(position.X, position.Y, position.Z));
+
+            // Set the heading
+            droneObj.Heading = position.W;
+
+            // Return
+            return droneObj;
+        }
+
+        public static async Task<Camera> CreateCamera(this Drone drone)
+        {
+            // Create camera
+            int _camera = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 50.0f, false, 0);
+            Camera camera = new Camera(_camera);
+
+            // Get the model's dimentions
+            Vector3 min = Vector3.Zero;
+            Vector3 max = Vector3.Zero;
+            GetModelDimensions(drone.ModelHash(), ref min, ref max);
+
+            // Set the camera as active
+            camera.IsActive = true;
+            RenderScriptCams(true, false, 0, true, false);
+            AttachCamToEntity(camera.Handle, drone.Handle, 0.0f, 0.0f, max.Z / 2 * -1, false);
+            SetFocusEntity(drone.Handle);
+
+            // Set the timecycle modifier
+            ClearTimecycleModifier();
+            SetTimecycleModifier("eyeinthesky");
+            SetTimecycleModifierStrength(1.0f);
+
+            // Return
+            return camera;
+        }
+
+        public static void Disconnect(this Drone drone)
+        {
+            // Stop sounds
+            StopSound(drone.SoundId);
+            ReleaseSoundId(drone.SoundId);
+            drone.SoundId = -1;
+
+            // Display radar
+            DisplayRadar(true);
+
+            // Reset vision
+            SetSeethrough(false);
+            SetNightvision(false);
+
+            // Delete drone
+            int droneHandle = drone.Handle;
+            DeleteObject(ref droneHandle);
+
+            return;
+        }
+
+        public static async Task DestroyCamera(this Drone drone)
+        {
+            SetFocusEntity(Game.PlayerPed.Handle);
+            ClearTimecycleModifier();
+            RenderScriptCams(false, true, 500, false, false);
+            await BaseScript.Delay(500);
+
+            DestroyCam(drone.Camera, true);
+            
+            return;
         }
         #endregion
     }

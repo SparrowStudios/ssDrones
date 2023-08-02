@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace SparrowStudios.Fivem.Common
+namespace SparrowStudios.Fivem.ssDrones
 {
     public static class Json
     {

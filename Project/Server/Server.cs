@@ -1,23 +1,35 @@
-﻿#region FiveM Mono v2 Server Using Statements
+﻿using static CitizenFX.Core.Native.API;
 using CitizenFX.Core;
-using CitizenFX.Server; // FiveM game related types (server only)
-using CitizenFX.Server.Native; // Server natives (server only)
-using CitizenFX.Shared.Native; // Shared natives (there for shared libraries)
-using static CitizenFX.Server.Native.Natives;
-using SharedNatives = CitizenFX.Shared.Native.Natives;
-#endregion
-
-using SparrowStudios.Fivem.Common.Server;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SparrowStudios.Fivem.Project.Server
+namespace SparrowStudios.Fivem.ssDrones.Server
 {
-    public class Server : SSServerScript
+    public class Server : BaseScript
     {
+        #region Variables
+        #endregion
+
+        public Server()
+        {
+
+        }
+
+        #region Ticks
+        #endregion
+
+        #region Event Handlers
+        #endregion
+
+        #region Functions
+        /// <summary>
+        /// Logs a message to the console
+        /// </summary>
+        /// <param name="message">The message to log</param>
+        public static void Log(string message) => Debug.WriteLine($"[{GetCurrentResourceName()}] LOG: {message}");
+        #endregion
     }
 }

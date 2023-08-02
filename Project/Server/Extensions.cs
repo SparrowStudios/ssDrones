@@ -1,60 +1,37 @@
-﻿#region FiveM Mono v2 Server Using Statements
+﻿using static CitizenFX.Core.Native.API;
 using CitizenFX.Core;
-using CitizenFX.Server; // FiveM game related types (server only)
-using CitizenFX.Server.Native; // Server natives (server only)
-using CitizenFX.Shared.Native; // Shared natives (there for shared libraries)
-using static CitizenFX.Server.Native.Natives;
-using SharedNatives = CitizenFX.Shared.Native.Natives;
-#endregion
+using System.Linq;
 
-namespace SparrowStudios.Fivem.Common.Server
+namespace SparrowStudios.Fivem.ssDrones.Server
 {
     public static class Extensions
     {
+        #region Supporting Functions
+        #endregion
+
         #region Player Extensions
-        /// <summary>
-        /// [BEST] - Get the R* identified of this player. Also known as the Social Club identifier.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns>String of the R* identifier, if present, or an empty string.</returns>
-        public static string GetLicenseId(this Player player) => SSServerScript.GetLicenseId(player);
+        public static string GetId(this Player p, string idPrefix)
+        {
+            string id = "";
+            if (p != null && p.Identifiers != null)
+            {
+                id = p.Identifiers.Where(x => x.StartsWith(idPrefix))
+                    .Select(x => x.Replace(idPrefix, "")).FirstOrDefault();
 
-        /// <summary>
-        /// [GOOD] - Get the Discord identified of this player.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns>String of the Discord identifier, if present, or an empty string.</returns>
-        public static string GetDiscordId(this Player player) => SSServerScript.GetDiscordId(player);
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    id = "";
+                }
+            }
 
-        /// <summary>
-        /// [POOR] - Get the Steam identified of this player.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns>String of the Steam identifier, if present, or an empty string.</returns>
-        public static string GetSteamId(this Player player) => SSServerScript.GetSteamId(player);
-
-        /// <summary>
-        /// [BETTER] - Get the Xbox Live identified of this player. Xbox Live account must be actived.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns>String of the Xbox Live identifier, if present, or an empty string.</returns>
-        public static string GetXblId(this Player player) => SSServerScript.GetXblId(player);
-
-        /// <summary>
-        /// [BETTER] - Gets the Xbox identifier of this player. Xbox App must be logged in.
-        /// Unknown if the Xbox app must be running. Also known as the Passport Unique Identifier (Xbox account without Xbox Live activated)
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns>String of the Xbox Live identifier, if present, or an empty string.</returns>
-        public static string GetLiveId(this Player player) => SSServerScript.GetLiveId(player);
-
-        /// <summary>
-        /// Checks if the player has a specified permission.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="permission">Ace permission string</param>
-        /// <returns>Boolean of the permission state</returns>
-        public static bool HasAce(this Player player, string permission) => SSServerScript.DoesPlayerHaveAce(player, permission);
+            return id;
+        }
+        public static string GetLicenseId(this Player player) => player.GetId("license:");
+        public static string GetDiscordId(this Player player) => player.GetId("discord:");
+        public static string GetSteamId(this Player player) => player.GetId("steam:");
+        public static string GetXblId(this Player player) => player.GetId("xbl:");
+        public static string GetLiveId(this Player player) => player.GetId("live:");
+        public static bool HasAce(this Player player, string permission) => IsPlayerAceAllowed(player.Handle.ToString(), permission);
         #endregion
     }
 }
