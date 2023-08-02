@@ -26,6 +26,12 @@ namespace SparrowStudios.Fivem.ssDrones.Models
             return drone;
         }
 
+        public DroneBuilder SetName(string name)
+        {
+            this._drone.Name = name;
+            return this;
+        }
+
         public DroneBuilder SetModel(string model)
         {
             this._drone.Model = model;

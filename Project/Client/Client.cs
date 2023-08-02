@@ -31,6 +31,18 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         #endregion
 
         #region Event Handlers
+        [EventHandler(Events.Client.DRONE_COMMAND)]
+        private void OnEventDroneCommand(string droneName)
+        {
+            Drone targetDrone = Drones.BasitDrone;
+
+            if (!string.IsNullOrEmpty(droneName) && Drones.List.FirstOrDefault(_drone => _drone.Name == droneName) != null) 
+            { 
+                targetDrone = Drones.List.FirstOrDefault(_drone => _drone.Name == droneName);
+            }
+
+            SpawnDrone(targetDrone);
+        }
         #endregion
 
         #region Functions
@@ -269,7 +281,19 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 }
                 #endregion
 
-                // Doing movment
+                // Doing movement
+                heading += rotationMomentum * drone.Agility;
+
+                if (!didMove & V3Utils.Magnitude(movementMomentum) > 0.0f)
+                {
+                    movementMomentum -= movementMomentum / 10.0f * drone.Agility;
+                }
+
+                ApplyForceToEntity(drone.Handle, 0, movementMomentum.X, movementMomentum.Y, movementMomentum.Z + 20.0f, 0.0f, 0.0f, 0.0f, 0, false, true, true, false, true);
+                SetEntityHeading(drone.Handle, heading);
+                SetCamRot(drone.Camera, cameraRotation.X, cameraRotation.Y, cameraRotation.Z + heading, 2);
+
+                await Delay(0);
             }
         }
         #endregion

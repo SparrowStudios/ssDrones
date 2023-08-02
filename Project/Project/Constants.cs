@@ -7,7 +7,7 @@ namespace SparrowStudios.Fivem.ssDrones
     {
         public static class Commands
         {
-            public const string PING = "ping";
+            public const string DRONE = "drone";
         }
 
         public static class Events
@@ -16,7 +16,7 @@ namespace SparrowStudios.Fivem.ssDrones
 
             public static class Client
             {
-                public const string PONG = PREFIX + "Pong";
+                public const string DRONE_COMMAND = PREFIX + "DroneCommand";
             }
 
             public static class Server
@@ -27,7 +27,13 @@ namespace SparrowStudios.Fivem.ssDrones
 
         public static class Drones
         {
+            public static readonly IList<Drone> List = new List<Drone>()
+            {
+                BasitDrone
+            };
+
             public static Drone BasitDrone = new DroneBuilder()
+                .SetName("Basit Drone")
                 .SetModel("ch_prop_casino_drone_02a")
                 .EnableInfared()
                 .EnableNightVision()

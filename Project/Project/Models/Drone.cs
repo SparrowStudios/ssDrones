@@ -11,6 +11,11 @@ namespace SparrowStudios.Fivem.ssDrones.Models
     {
         #region Properties
         /// <summary>
+        /// The name of the drone
+        /// </summary>
+        public string Name { get; set; } = "Basit Drone";
+
+        /// <summary>
         /// The model name of the drone
         /// </summary>
         public string Model { get; set; } = "ch_prop_casino_drone_02a";

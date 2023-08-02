@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SparrowStudios.Fivem.ssDrones.Constants;
 
 namespace SparrowStudios.Fivem.ssDrones.Server
 {
@@ -19,6 +20,14 @@ namespace SparrowStudios.Fivem.ssDrones.Server
         }
 
         #region Ticks
+        #endregion
+
+        #region Commands
+        [Command(Commands.DRONE)]
+        private void OnCommandDrone([FromSource] Player sender, string[] args)
+        {
+            sender.TriggerEvent(Events.Client.DRONE_COMMAND, string.Join(" ", args));
+        }
         #endregion
 
         #region Event Handlers
