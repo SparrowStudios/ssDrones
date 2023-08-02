@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using SparrowStudios.Fivem.ssDrones.Models;
 using static SparrowStudios.Fivem.ssDrones.Constants;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SparrowStudios.Fivem.ssDrones.Client
 {
@@ -202,7 +203,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlPressed(0, Controls.Camera.LEFT.KeyIndex))
                 {
                     Log($"{Controls.Camera.LEFT.Label} pushed");
-                    cameraRotation = cameraRotation + (new Vector3(0.0f, 0.0f, 1.0f) / Math.Max(2, zoom));
+                    cameraRotation = cameraRotation + (new Vector3(0.0f, 0.0f, 1.0f) / Math.Max(2f, zoom));
                 }
                 #endregion
 
@@ -227,23 +228,23 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Drone Heading
                 if (IsDisabledControlPressed(0, Controls.Heading.RIGHT.KeyIndex))
                 {
-                    rotationMomentum = (float) Math.Max(-1.5, rotationMomentum - 0.02);
-                    Log($"{Controls.Heading.RIGHT.Label} pushed (Rot Momentum: {rotationMomentum})");
+                    Log($"{Controls.Heading.RIGHT.Label} pushed (Rot Momentum: pre:{rotationMomentum}, post:{(float)Math.Max(-1.5f, rotationMomentum - 0.02f)})");
+                    rotationMomentum = (float) Math.Max(-1.5f, rotationMomentum - 0.02f);
                 }
                 else if (IsDisabledControlPressed(0, Controls.Heading.LEFT.KeyIndex))
                 {
-                    rotationMomentum = (float) Math.Max(1.5, rotationMomentum + 0.02);
-                    Log($"{Controls.Heading.LEFT.Label} pushed (Rot Momentum: {rotationMomentum})");
+                    Log($"{Controls.Heading.LEFT.Label} pushed (Rot Momentum: pre:{rotationMomentum}, post:{(float)Math.Max(1.5f, rotationMomentum + 0.02f)})");
+                    rotationMomentum = (float) Math.Max(1.5f, rotationMomentum + 0.02f);
                 }
                 else
                 {
                     if (rotationMomentum > 0.0f)
                     {
-                        rotationMomentum = (float) Math.Max(0.0, rotationMomentum - 0.04);
+                        rotationMomentum = (float) Math.Max(0.0f, rotationMomentum - 0.04f);
                     }
                     else if (rotationMomentum < 0.0f)
                     {
-                        rotationMomentum = (float) Math.Max(0.0, rotationMomentum + 0.04);
+                        rotationMomentum = (float) Math.Max(0.0f, rotationMomentum + 0.04f);
                     }
                 }
                 #endregion
@@ -313,9 +314,84 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 SetEntityHeading(drone.Handle, heading);
                 SetCamRot(drone.Camera, cameraRotation.X, cameraRotation.Y, cameraRotation.Z + heading, 2);
 
+                DrawTextOnScreen($"Movement Momentum: X: {movementMomentum.X}, Y: {movementMomentum.Y}, Z: {movementMomentum.Z}", 0.015f, 0.015f, 0.35f, Alignment.Left, 6, false);
+
                 await Delay(0);
             }
         }
         #endregion
+
+        #region Hud Functions
+        /// <summary>
+        /// Draw text on the screen at the provided x and y locations.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="xPosition">The x position for the text draw origin.</param>
+        /// <param name="yPosition">The y position for the text draw origin.</param>
+        public static void DrawTextOnScreen(string text, float xPosition, float yPosition) =>
+            DrawTextOnScreen(text, xPosition, yPosition, size: 0.48f);
+
+        /// <summary>
+        /// Draw text on the screen at the provided x and y locations.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="xPosition">The x position for the text draw origin.</param>
+        /// <param name="yPosition">The y position for the text draw origin.</param>
+        /// <param name="size">The size of the text.</param>
+        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size) =>
+            DrawTextOnScreen(text, xPosition, yPosition, size, CitizenFX.Core.UI.Alignment.Left);
+
+        /// <summary>
+        /// Draw text on the screen at the provided x and y locations.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="xPosition">The x position for the text draw origin.</param>
+        /// <param name="yPosition">The y position for the text draw origin.</param>
+        /// <param name="size">The size of the text.</param>
+        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
+        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification) =>
+            DrawTextOnScreen(text, xPosition, yPosition, size, justification, 6);
+
+        /// <summary>
+        /// Draw text on the screen at the provided x and y locations.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="xPosition">The x position for the text draw origin.</param>
+        /// <param name="yPosition">The y position for the text draw origin.</param>
+        /// <param name="size">The size of the text.</param>
+        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
+        /// <param name="font">Specify the font to use (0-8).</param>
+        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification, int font) =>
+            DrawTextOnScreen(text, xPosition, yPosition, size, justification, font, false);
+
+        /// <summary>
+        /// Draw text on the screen at the provided x and y locations.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="xPosition">The x position for the text draw origin.</param>
+        /// <param name="yPosition">The y position for the text draw origin.</param>
+        /// <param name="size">The size of the text.</param>
+        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
+        /// <param name="font">Specify the font to use (0-8).</param>
+        /// <param name="disableTextOutline">Disables the default text outline.</param>
+        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification, int font, bool disableTextOutline)
+        {
+            if (IsHudPreferenceSwitchedOn() && !IsPlayerSwitchInProgress() && IsScreenFadedIn() && !IsPauseMenuActive() && !IsFrontendFading() && !IsPauseMenuRestarting() && !IsHudHidden())
+            {
+                SetTextFont(font);
+                SetTextScale(1.0f, size);
+                if (justification == CitizenFX.Core.UI.Alignment.Right)
+                {
+                    SetTextWrap(0f, xPosition);
+                }
+                SetTextJustification((int)justification);
+                if (!disableTextOutline) { SetTextOutline(); }
+                BeginTextCommandDisplayText("STRING");
+                AddTextComponentSubstringPlayerName(text);
+                EndTextCommandDisplayText(xPosition, yPosition);
+            }
+        }
+        #endregion
+
     }
 }
