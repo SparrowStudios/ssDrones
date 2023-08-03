@@ -48,6 +48,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScaleformUtils.cs" />
     <Compile Include="SSClientScript.cs" />
     <Compile Include="V3Utils.cs" />
   </ItemGroup>

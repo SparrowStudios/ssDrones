@@ -50,7 +50,8 @@ namespace SparrowStudios.Fivem.ssDrones.Models
         public int NetId { get; set; }
         public int SoundId { get; set; }
         public int Camera { get; set; }
-        public int Scaleform { get; set; }
+        public int DroneScaleform { get; set; }
+        public int ControlsScaleform { get; set; }
         #endregion
     }
 }

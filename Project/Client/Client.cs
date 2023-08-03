@@ -1,14 +1,10 @@
-﻿using static CitizenFX.Core.Native.API;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CitizenFX.Core;
-using CitizenFX.Core.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SparrowStudios.Fivem.ssDrones.Models;
+using static CitizenFX.Core.Native.API;
 using static SparrowStudios.Fivem.ssDrones.Constants;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SparrowStudios.Fivem.ssDrones.Client
 {
@@ -19,7 +15,6 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         public static Ped ClientPed => Game.PlayerPed;
         public static Vehicle ClientCurrentVehicle => ClientPed?.CurrentVehicle;
         public static Vehicle ClientLastVehicle => ClientPed?.LastVehicle;
-
         public Drone CurrentDrone;
         #endregion
 
@@ -47,7 +42,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         #endregion
 
         #region Functions
-        private static void Log(string message) => Debug.WriteLine($"[ssDrones] {message}");
+        private static void Log(string message) => Debug.WriteLine($"[ssDrones] DEBUG: {message}");
 
         private async Task SpawnDrone(Drone drone)
         {
@@ -69,6 +64,45 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             SetObjectPhysicsParams(droneObj.Handle, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
             // Scaleform stuffzz here
+            drone.DroneScaleform = await ScaleformUtils.LoadMove("DRONE_CAM");
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_EMP_METER_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_INFO_LIST_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_SOUND_WAVE_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_TRANQUILIZE_METER_IS_VISIBLE", false);
+            
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_DETONATE_METER_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_SHOCK_METER_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_RETICLE_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_BOOST_METER_IS_VISIBLE", false);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_HEADING_METER_IS_VISIBLE", true);
+            ScaleformUtils.PopBool(drone.DroneScaleform, "SET_ZOOM_METER_IS_VISIBLE", true);
+
+            ScaleformUtils.PopInt(drone.DroneScaleform, "SET_ZOOM", 0);
+
+            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
+            ScaleformUtils.PopMultiInt(0);
+            ScaleformUtils.PopMultiString("DRONE_ZOOM_1");
+            ScaleformUtils.EndPopMulti();
+
+            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
+            ScaleformUtils.PopMultiInt(1);
+            ScaleformUtils.PopMultiString("");
+            ScaleformUtils.EndPopMulti();
+
+            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
+            ScaleformUtils.PopMultiInt(2);
+            ScaleformUtils.PopMultiString("DRONE_ZOOM_2");
+            ScaleformUtils.EndPopMulti();
+
+            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
+            ScaleformUtils.PopMultiInt(3);
+            ScaleformUtils.PopMultiString("");
+            ScaleformUtils.EndPopMulti();
+
+            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
+            ScaleformUtils.PopMultiInt(4);
+            ScaleformUtils.PopMultiString("DRONE_ZOOM_3");
+            ScaleformUtils.EndPopMulti();
 
             // Set & play the sounds from the drone
             drone.SoundId = GetSoundId();
@@ -299,7 +333,6 @@ namespace SparrowStudios.Fivem.ssDrones.Client
 
                     PointCamAtEntity(drone.Camera, ClientPed.Handle, 0.0f, 0.0f, 0.0f, true);
 
-                    bool continueFlying = false;
                     Vector3 dronePos = GetEntityCoords(drone.Handle, true);
                     float _distance = Vdist(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z);
 
