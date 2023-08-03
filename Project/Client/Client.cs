@@ -228,13 +228,13 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 #region Drone Heading
                 if (IsDisabledControlPressed(0, Controls.Heading.RIGHT.KeyIndex))
                 {
-                    Log($"{Controls.Heading.RIGHT.Label} pushed (Rot Momentum: pre:{rotationMomentum}, post:{(float)Math.Max(-1.5f, rotationMomentum - 0.02f)})");
+                    Log($"{Controls.Heading.RIGHT.Label} pushed");
                     rotationMomentum = (float) Math.Max(-1.5f, rotationMomentum - 0.02f);
                 }
                 else if (IsDisabledControlPressed(0, Controls.Heading.LEFT.KeyIndex))
                 {
-                    Log($"{Controls.Heading.LEFT.Label} pushed (Rot Momentum: pre:{rotationMomentum}, post:{(float)Math.Max(1.5f, rotationMomentum + 0.02f)})");
-                    rotationMomentum = (float) Math.Max(1.5f, rotationMomentum + 0.02f);
+                    Log($"{Controls.Heading.LEFT.Label} pushed");
+                    rotationMomentum = (float) Math.Min(1.5f, rotationMomentum + 0.02f);
                 }
                 else
                 {
@@ -244,7 +244,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                     }
                     else if (rotationMomentum < 0.0f)
                     {
-                        rotationMomentum = (float) Math.Max(0.0f, rotationMomentum + 0.04f);
+                        rotationMomentum = (float) Math.Min(0.0f, rotationMomentum + 0.04f);
                     }
                 }
                 #endregion
@@ -256,7 +256,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 {
                     Log($"{Controls.Zoom.OUT.Label} pushed");
                     zoom = (float)Math.Max(0, zoom - 1);
-                    SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
+                    SetCamFov(drone.Camera, 50.0f - (5.0f * zoom));
                 }
                 #endregion
 
@@ -264,8 +264,8 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlJustPressed(0, Controls.Zoom.IN.KeyIndex))
                 {
                     Log($"{Controls.Zoom.IN.Label} pushed");
-                    zoom = (float)Math.Max(4, zoom + 1);
-                    SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
+                    zoom = (float)Math.Min(4, zoom + 1);
+                    SetCamFov(drone.Camera, 50.0f - (5.0f * zoom));
                 }
                 #endregion
 
@@ -314,7 +314,8 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 SetEntityHeading(drone.Handle, heading);
                 SetCamRot(drone.Camera, cameraRotation.X, cameraRotation.Y, cameraRotation.Z + heading, 2);
 
-                DrawTextOnScreen($"Movement Momentum: X: {movementMomentum.X}, Y: {movementMomentum.Y}, Z: {movementMomentum.Z}", 0.015f, 0.015f, 0.35f, Alignment.Left, 6, false);
+                SetTimecycleModifierStrength(distance / drone.Range);
+                //DrawTextOnScreen($"Movement Momentum: X: {movementMomentum.X}, Y: {movementMomentum.Y}, Z: {movementMomentum.Z}", 0.015f, 0.015f, 0.35f, Alignment.Left, 6, false);
 
                 await Delay(0);
             }
