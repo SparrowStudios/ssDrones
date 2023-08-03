@@ -308,36 +308,19 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                     while (_distance > 3.0)
                     {
                         dronePos = GetEntityCoords(drone.Handle, true);
-                        Vector3 direction = -1 * V3Utils.ClampMagnitude((dronePos - ClientPed.Position) * 10.0f, (250.0f * drone.Speed));
+                        Vector3 direction = V3Utils.ClampMagnitude((dronePos - ClientPed.Position) * 10.0f, (250.0f * drone.Speed)) * -1.0f;
 
                         DisableAllControlActions(0);
                         SetEntityNoCollisionEntity(ClientPed.Handle, drone.Handle, true);
 
-                        ApplyForceToEntity(drone.Handle, 0, direction.X, direction.Y, 20.0f + (Vdist2(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z) <= 5.0f ? direction.Z : 0.0f), 0.0f, 0.0f ,0.0f, 0, false, true, true, false, true);
-                        
-                        if (IsDisabledControlJustReleased(0, Controls.DISCONNECT.KeyIndex))
-                        {
-                            continueFlying = true;
-                            await Delay(100);
-                            break;
-                        }
+                        ApplyForceToEntity(drone.Handle, 0, direction.X, direction.Y, 20.0f + (dronePos.DistanceTo2D(ClientPed.Position) <= 5.0f ? direction.Z : 0.0f), 0.0f, 0.0f ,0.0f, 0, false, true, true, false, true);
 
                         _distance = Vdist(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z);
                         SetTimecycleModifierStrength(_distance / drone.Range);
                         await Delay(0);
                     }
 
-                    if (!continueFlying)
-                    {
-                        drone.Disconnect();
-                        await drone.DestroyCamera();
-                        return;
-                    }
-                    else
-                    {
-                        StopCamPointing(drone.Camera);
-                    }
-
+                    StopCamPointing(drone.Camera);
                     drone.Disconnect();
                     await drone.DestroyCamera();
                     return;
