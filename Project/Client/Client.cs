@@ -256,7 +256,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 {
                     Log($"{Controls.Zoom.OUT.Label} pushed");
                     zoom = (float)Math.Max(0, zoom - 1);
-                    SetCamFov(drone.Camera, 50.0f - (5.0f * zoom));
+                    SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
                 #endregion
 
@@ -265,7 +265,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 {
                     Log($"{Controls.Zoom.IN.Label} pushed");
                     zoom = (float)Math.Min(4, zoom + 1);
-                    SetCamFov(drone.Camera, 50.0f - (5.0f * zoom));
+                    SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
                 #endregion
 
@@ -296,6 +296,48 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlJustReleased(0, Controls.DISCONNECT.KeyIndex))
                 {
                     Log($"{Controls.DISCONNECT.Label} pushed");
+
+                    PointCamAtEntity(drone.Camera, ClientPed.Handle, 0.0f, 0.0f, 0.0f, true);
+
+                    bool continueFlying = false;
+                    Vector3 dronePos = GetEntityCoords(drone.Handle, true);
+                    float _distance = Vdist(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z);
+
+                    await Delay(100);
+
+                    while (_distance > 3.0)
+                    {
+                        dronePos = GetEntityCoords(drone.Handle, true);
+                        Vector3 direction = -1 * V3Utils.ClampMagnitude((dronePos - ClientPed.Position) * 10.0f, (250.0f * drone.Speed));
+
+                        DisableAllControlActions(0);
+                        SetEntityNoCollisionEntity(ClientPed.Handle, drone.Handle, true);
+
+                        ApplyForceToEntity(drone.Handle, 0, direction.X, direction.Y, 20.0f + (Vdist2(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z) <= 5.0f ? direction.Z : 0.0f), 0.0f, 0.0f ,0.0f, 0, false, true, true, false, true);
+                        
+                        if (IsDisabledControlJustReleased(0, Controls.DISCONNECT.KeyIndex))
+                        {
+                            continueFlying = true;
+                            await Delay(100);
+                            break;
+                        }
+
+                        _distance = Vdist(dronePos.X, dronePos.Y, dronePos.Z, ClientPed.Position.X, ClientPed.Position.Y, ClientPed.Position.Z);
+                        SetTimecycleModifierStrength(_distance / drone.Range);
+                        await Delay(0);
+                    }
+
+                    if (!continueFlying)
+                    {
+                        drone.Disconnect();
+                        await drone.DestroyCamera();
+                        return;
+                    }
+                    else
+                    {
+                        StopCamPointing(drone.Camera);
+                    }
+
                     drone.Disconnect();
                     await drone.DestroyCamera();
                     return;
