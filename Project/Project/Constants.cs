@@ -57,10 +57,10 @@ namespace SparrowStudios.Fivem.ssDrones
 
             public static class Camera
             {
-                public static DroneControl UP = new DroneControl("Camera Up", (int)GameControls.INPUT_VEH_FLY_PITCH_UP_ONLY);
-                public static DroneControl DOWN = new DroneControl("Camera Down", (int)GameControls.INPUT_VEH_FLY_PITCH_UD);
-                public static DroneControl LEFT = new DroneControl("Camera Left", (int)GameControls.INPUT_VEH_FLY_ROLL_LEFT_ONLY);
-                public static DroneControl RIGHT = new DroneControl("Camera Right", (int)GameControls.INPUT_VEH_FLY_ROLL_RIGHT_ONLY);
+                public static DroneControl UP = new DroneControl("Camera Up", (int)GameControls.INPUT_CELLPHONE_UP);
+                public static DroneControl DOWN = new DroneControl("Camera Down", (int)GameControls.INPUT_CELLPHONE_DOWN);
+                public static DroneControl LEFT = new DroneControl("Camera Left", (int)GameControls.INPUT_CELLPHONE_LEFT);
+                public static DroneControl RIGHT = new DroneControl("Camera Right", (int)GameControls.INPUT_CELLPHONE_RIGHT);
                 public static DroneControl CENTER = new DroneControl("Camera Center", (int)GameControls.INPUT_FRONTEND_DELETE);
             }
 
