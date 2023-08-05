@@ -373,7 +373,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 SetCamRot(drone.Camera, cameraRotation.X, cameraRotation.Y, cameraRotation.Z + heading, 2);
 
                 SetTimecycleModifierStrength(distance / drone.Range);
-                //DrawTextOnScreen($"Movement Momentum: X: {movementMomentum.X}, Y: {movementMomentum.Y}, Z: {movementMomentum.Z}", 0.015f, 0.015f, 0.35f, Alignment.Left, 6, false);
+                DrawScaleformMovieFullscreen(drone.DroneScaleform, 255, 255, 255, 255, 0);
 
                 await Delay(0);
             }
