@@ -79,30 +79,11 @@ namespace SparrowStudios.Fivem.ssDrones.Client
 
             ScaleformUtils.PopInt(drone.DroneScaleform, "SET_ZOOM", 0);
 
-            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
-            ScaleformUtils.PopMultiInt(0);
-            ScaleformUtils.PopMultiString("DRONE_ZOOM_1");
-            ScaleformUtils.EndPopMulti();
-
-            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
-            ScaleformUtils.PopMultiInt(1);
-            ScaleformUtils.PopMultiString("");
-            ScaleformUtils.EndPopMulti();
-
-            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
-            ScaleformUtils.PopMultiInt(2);
-            ScaleformUtils.PopMultiString("DRONE_ZOOM_2");
-            ScaleformUtils.EndPopMulti();
-
-            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
-            ScaleformUtils.PopMultiInt(3);
-            ScaleformUtils.PopMultiString("");
-            ScaleformUtils.EndPopMulti();
-
-            ScaleformUtils.StartPopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL");
-            ScaleformUtils.PopMultiInt(4);
-            ScaleformUtils.PopMultiString("DRONE_ZOOM_3");
-            ScaleformUtils.EndPopMulti();
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 0, "DRONE_ZOOM_1");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 1, "");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 2, "DRONE_ZOOM_2");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 3, "");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 4, "DRONE_ZOOM_3");
 
             // Set & play the sounds from the drone
             drone.SoundId = GetSoundId();
@@ -289,7 +270,8 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlJustPressed(0, Controls.Zoom.OUT.KeyIndex))
                 {
                     Log($"{Controls.Zoom.OUT.Label} pushed");
-                    zoom = (float)Math.Max(0, zoom - 1);
+                    zoom = Math.Max(0, zoom - 1);
+                    ScaleformUtils.PopInt(drone.DroneScaleform, "SET_ZOOM", (int)zoom);
                     SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
                 #endregion
@@ -298,7 +280,8 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 if (IsDisabledControlJustPressed(0, Controls.Zoom.IN.KeyIndex))
                 {
                     Log($"{Controls.Zoom.IN.Label} pushed");
-                    zoom = (float)Math.Min(4, zoom + 1);
+                    zoom = Math.Min(4, zoom + 1);
+                    ScaleformUtils.PopInt(drone.DroneScaleform, "SET_ZOOM", (int)zoom);
                     SetCamFov(drone.Camera, 50.0f - (10.0f * zoom));
                 }
                 #endregion

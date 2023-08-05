@@ -53,22 +53,31 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             PopScaleformMovieFunctionVoid();
         }
 
-        public static void StartPopMulti(int scaleform, string method) 
-            => PushScaleformMovieFunction(scaleform, method);
+        public static void PopMulti(int scaleform, string method, params object[] args)
+        {
+            PushScaleformMovieFunction(scaleform, method);
 
-        public static void EndPopMulti() 
-            => PopScaleformMovieFunctionVoid();
+            foreach (var arg in args)
+            {
+                if (arg.GetType() == typeof(int))
+                {
+                    PushScaleformMovieFunctionParameterInt((int)arg);
+                }
+                else if(arg.GetType() == typeof(string))
+                {
+                    PushScaleformMovieFunctionParameterString((string)arg);
+                }
+                else if(arg.GetType() == typeof(bool))
+                {
+                    PushScaleformMovieFunctionParameterBool((bool)arg);
+                }
+                else if(arg.GetType() == typeof(float))
+                {
+                    PushScaleformMovieFunctionParameterFloat((float)arg);
+                }
+            }
 
-        public static void PopMultiString(string value)
-            => PushScaleformMovieFunctionParameterString(value);
-
-        public static void PopMultiBool(bool value)
-            => PushScaleformMovieFunctionParameterBool(value);
-
-        public static void PopMultiInt(int value)
-            => PushScaleformMovieFunctionParameterInt(value);
-
-        public static void PopMultiFloat(float value)
-            => PushScaleformMovieFunctionParameterFloat(value);
+            PopScaleformMovieFunctionVoid();
+        }
     }
 }
