@@ -54,6 +54,7 @@
     <ProjectReference Include="..\Project\ssDrones.csproj">
       <Project>{26664d19-9dd7-4e0d-8268-ac6b6cb5ec6f}</Project>
       <Name>ssDrones</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

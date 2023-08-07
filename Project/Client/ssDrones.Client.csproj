@@ -49,13 +49,13 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScaleformUtils.cs" />
-    <Compile Include="SSClientScript.cs" />
     <Compile Include="V3Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Project\ssDrones.csproj">
       <Project>{26664d19-9dd7-4e0d-8268-ac6b6cb5ec6f}</Project>
       <Name>ssDrones</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -67,24 +67,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="stream\ch_prop_arcade_drone_01a.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_arcade_drone_01b.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_arcade_drone_01c.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_arcade_drone_01d.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_arcade_drone_01e.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_casino_drone_01a.yft">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="stream\ch_prop_casino_drone_02a.yft">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="stream\ch_prop_casino_drone_broken01a.ydr">

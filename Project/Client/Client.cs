@@ -1,7 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿// ssDrones (https://github.com/SparrowStudios/ssDrones)
+// Author: Jacob Paulin (JayPaulinCodes)
+// Created: Jul 29 2023
+// Updated: Aug 7 2023
+// 
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 using CitizenFX.Core;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using SparrowStudios.Fivem.ssDrones.Models;
 using static CitizenFX.Core.Native.API;
 using static SparrowStudios.Fivem.ssDrones.Constants;
@@ -36,7 +45,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 targetDrone = Drones.List.FirstOrDefault(_drone => _drone.Name == droneName);
             }
 
-            SpawnDrone(targetDrone);
+            _ = SpawnDrone(targetDrone);
         }
         #endregion
 
@@ -55,7 +64,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             drone.NetId = droneObj.NetworkId;
 
             // Create the camera
-            Camera droneCam = await drone.CreateCamera();
+            Camera droneCam = drone.CreateCamera();
             drone.Camera = droneCam.Handle;
 
             // Setup on the drone object
@@ -96,7 +105,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             CurrentDrone = drone;
 
             // Start listening for control inputs
-            ListenForDroneControls(drone);
+            _ = ListenForDroneControls(drone);
         }
 
         private async Task ListenForDroneControls(Drone drone)
@@ -140,12 +149,6 @@ namespace SparrowStudios.Fivem.ssDrones.Client
 
                 // Disable collision betwen the player and the drone this frame
                 SetEntityNoCollisionEntity(ClientPed.Handle, drone.Handle, true);
-
-                // Play the animation on the player
-                //if (!IsEntityPlayingAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 3))
-                //{
-                //    TaskPlayAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 8.0f, 8.0f, -1, 2, 1.0f, false, false, false);
-                //}
 
                 #region Drone Movement
                 bool didMove = false;
