@@ -26,7 +26,6 @@ jobs:
     - name: Build with dotnet
       run: dotnet build
     - name: Define Build Artifact
-      shell: bash
       run: |
         echo ${{ github.workspace }} > script-deploy.txt
     - name: Upload Build Artifact
@@ -48,7 +47,6 @@ jobs:
         name: script-deploy
     - name: Process Artifact
       id: deploy-path
-      shell: bash
       run: |
         buildPath=`cat script-deploy.txt`
         echo "SCRIPT_BUILD_PATH=$buildPath" >> "$GITHUB_OUTPUT"
