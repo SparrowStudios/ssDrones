@@ -25,10 +25,16 @@ jobs:
         dotnet-version: 7.0.306
     - name: Build with dotnet
       run: dotnet build
-    - name: Set deplay Variables
-      if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
-      run: echo "SCRIPT_BUILD_FOLDER=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
-    
+    - name: Define Build Artifact
+      shell: bash
+      run: |
+        echo ${{ github.workspace }} > script-deploy.txt
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: script-deploy
+        path: script-deploy.txt
+
 
   deploy-dev:
     needs: build
@@ -36,13 +42,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: script-deploy
+    - name: Process Artifact
+      id: deploy-path
+      shell: bash
+      run: |
+        buildPath=`cat script-deploy.txt`
+        echo "SCRIPT_BUILD_PATH=$buildPath" >> "$GITHUB_OUTPUT"
     - name: Var Dump
       run: |
-        echo "${{ steps.build.SCRIPT_BUILD_FOLDER }}\bld"
+        echo "${{ steps.deploy-path.SCRIPT_BUILD_PATH }}\bld"
     - name: Deploy to dev server
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: ${{ steps.build.SCRIPT_BUILD_FOLDER }}\bld
+        local: ${{ steps.deploy-path.SCRIPT_BUILD_PATH }}\bld
         remote: C:\fivem-server\txData\developmentServer1\resources\[dev-scripts]
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
