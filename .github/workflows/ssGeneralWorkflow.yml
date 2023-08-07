@@ -52,11 +52,11 @@ jobs:
         echo "SCRIPT_BUILD_PATH=$buildPath" >> "$GITHUB_OUTPUT"
     - name: Var Dump
       run: |
-        echo "${{ steps.deploy-path.SCRIPT_BUILD_PATH }}\bld"
+        echo "${{ steps.deploy-path.outputs.SCRIPT_BUILD_PATH }}\bld"
     - name: Deploy to dev server
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: ${{ steps.deploy-path.SCRIPT_BUILD_PATH }}\bld
+        local: ${{ steps.deploy-path.outputs.SCRIPT_BUILD_PATH }}\bld
         remote: C:\fivem-server\txData\developmentServer1\resources\[dev-scripts]
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
