@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Execute request
         run: |
+          echo "${{github.repository_visibility}}"
           $runTime = ([timespan]::fromseconds(((Invoke-WebRequest -Uri https://api.github.com/repos/SparrowStudios/${{ github.event.workflow_run.repository.name }}/actions/runs/${{ github.event.workflow_run.id }}/timing -ContentType "application/json" -Method Get -UseBasicParsing).Content | Out-String | ConvertFrom-Json).run_duration_ms / 1000).ToString("mm\:ss"))
           Invoke-WebRequest -Uri "http://localhost:3000/workflow/success" -Method "POST" -UseBasicParsing -ContentType "application/json" -Body (@{ 
             "branchName" = "${{ github.event.workflow_run.head_branch }}"
