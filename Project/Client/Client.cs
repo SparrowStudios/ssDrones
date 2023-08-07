@@ -64,6 +64,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             SetObjectPhysicsParams(droneObj.Handle, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
             // Scaleform stuffzz here
+            drone.ControlsScaleform = await GenerateControlsScaleform();
             drone.DroneScaleform = await ScaleformUtils.LoadMove("DRONE_CAM");
             ScaleformUtils.PopBool(drone.DroneScaleform, "SET_EMP_METER_IS_VISIBLE", false);
             ScaleformUtils.PopBool(drone.DroneScaleform, "SET_INFO_LIST_IS_VISIBLE", false);
@@ -356,10 +357,118 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 SetCamRot(drone.Camera, cameraRotation.X, cameraRotation.Y, cameraRotation.Z + heading, 2);
 
                 SetTimecycleModifierStrength(distance / drone.Range);
+                DrawScaleformMovieFullscreen(drone.ControlsScaleform, 255, 255, 255, 255, 0);
                 DrawScaleformMovieFullscreen(drone.DroneScaleform, 255, 255, 255, 255, 0);
 
                 await Delay(0);
             }
+        }
+
+        private async Task<int> GenerateControlsScaleform()
+        {
+            int scaleform = await ScaleformUtils.LoadMove("INSTRUCTIONAL_BUTTONS");
+
+            ScaleformUtils.PopVoid(scaleform, "CLEAR_ALL");
+            ScaleformUtils.PopInt(scaleform, "SET_CLEAR_SPACE", 200);
+
+            #region Movement Controls
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(0);
+            
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.FORWARD.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.BACKWARDS.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.LEFT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.RIGHT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.DOWN.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Movement.UP.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Movement");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Camera Controls
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(1);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Camera.UP.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Camera.DOWN.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Camera.LEFT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Camera.RIGHT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Camera.CENTER.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Camera");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Heading Controls
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(2);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Heading.RIGHT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Heading.LEFT.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Heading");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Zoom Controls
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(3);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Zoom.OUT.KeyIndex, 1));
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.Zoom.IN.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Zoom");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Toggle Nightvision Control
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(4);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.TOGGLE_NIGHTVISION.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Toggle Nightvision");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Toggle Infared Control
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(5);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.TOGGLE_INFARED.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Toggle Infared");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            #region Disconnect Control
+            PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT");
+            PushScaleformMovieFunctionParameterInt(6);
+
+            ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, Controls.DISCONNECT.KeyIndex, 1));
+
+            BeginTextCommandScaleformString("STRING");
+            AddTextComponentScaleform("Disconnect");
+            EndTextCommandScaleformString();
+            PopScaleformMovieFunctionVoid();
+            #endregion
+
+            ScaleformUtils.PopVoid(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS");
+
+            return scaleform;
         }
         #endregion
 
