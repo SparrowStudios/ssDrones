@@ -48,7 +48,7 @@ jobs:
     - name: Process Artifact
       id: deploy-path
       run: |
-        buildPath=`cat script-deploy.txt`
+        $buildPath = Get-Content .\script-deploy.txt -Raw 
         echo "SCRIPT_BUILD_PATH=$buildPath" >> "$GITHUB_OUTPUT"
     - name: Var Dump
       run: |
