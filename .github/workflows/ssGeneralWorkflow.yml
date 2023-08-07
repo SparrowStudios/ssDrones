@@ -17,6 +17,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
     - name: Checkout
       uses: actions/checkout@v3
     - name: Setup .NET Core
@@ -25,11 +29,22 @@ jobs:
         dotnet-version: 7.0.306
     - name: Build with dotnet
       run: dotnet build
-    - name: Deploy to dev server
+    - name: Set deplay Variables
       if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
+      run: echo "SCRIPT_BUILD_FOLDER=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
+    
+
+  deploy-dev:
+    if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Deploy to dev server
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: ${{ github.workspace }}\bld
+        local: ${{ steps.build.SCRIPT_BUILD_FOLDER }}\bld
         remote: C:\fivem-server\txData\developmentServer1\resources\[dev-scripts]
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
