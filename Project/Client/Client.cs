@@ -14,6 +14,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         public static Player ClientPlayer => Game.Player;
         public static Ped ClientPed => Game.PlayerPed;
         public Drone CurrentDrone;
+        public int TabletObj;
         #endregion
 
         public Client()
@@ -110,6 +111,17 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             // Hide the radar
             DisplayRadar(false);
 
+            // Play the animation
+            RequestAnimDict("amb@code_human_in_bus_passenger_idles@female@tablet@idle_a");
+            while (!HasAnimDictLoaded("amb@code_human_in_bus_passenger_idles@female@tablet@idle_a"))
+            {
+                await Delay(0);
+            }
+            TabletObj = CreateObject(GetHashKey("prop_cs_tablet"), 0.0f, 0.0f, 0.0f, true, true, true);
+            AttachEntityToEntity(TabletObj, ClientPed.Handle, GetPedBoneIndex(PlayerPedId(), 28422), -0.05f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, true, true, false, true, 1, true);
+            TaskPlayAnim(ClientPed.Handle, "amb@code_human_in_bus_passenger_idles@female@tablet@idle_a", "idle_a", 8.0f, -8.0f, -1, 49, 0, false, false, false);
+            FreezeEntityPosition(ClientPed.Handle, true);
+
             // Start the loop
             while (true)
             {
@@ -130,10 +142,10 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                 SetEntityNoCollisionEntity(ClientPed.Handle, drone.Handle, true);
 
                 // Play the animation on the player
-                if (!IsEntityPlayingAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 3))
-                {
-                    TaskPlayAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 8.0f, 8.0f, -1, 2, 1.0f, false, false, false);
-                }
+                //if (!IsEntityPlayingAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 3))
+                //{
+                //    TaskPlayAnim(ClientPed.Handle, "anim@heists@ornate_bank@hack", "hack_loop", 8.0f, 8.0f, -1, 2, 1.0f, false, false, false);
+                //}
 
                 #region Drone Movement
                 bool didMove = false;
@@ -334,6 +346,11 @@ namespace SparrowStudios.Fivem.ssDrones.Client
                         SetTimecycleModifierStrength(_distance / drone.Range);
                         await Delay(0);
                     }
+
+                    // Stop animation
+                    StopAnimTask(ClientPed.Handle, "amb@code_human_in_bus_passenger_idles@female@tablet@idle_a", "idle_a", 8.0f);
+                    DeleteObject(ref TabletObj);
+                    FreezeEntityPosition(ClientPed.Handle, false);
 
                     StopCamPointing(drone.Camera);
                     drone.Disconnect();
