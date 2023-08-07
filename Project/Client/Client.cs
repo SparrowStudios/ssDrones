@@ -13,8 +13,6 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         #region Variables
         public static Player ClientPlayer => Game.Player;
         public static Ped ClientPed => Game.PlayerPed;
-        public static Vehicle ClientCurrentVehicle => ClientPed?.CurrentVehicle;
-        public static Vehicle ClientLastVehicle => ClientPed?.LastVehicle;
         public Drone CurrentDrone;
         #endregion
 
@@ -80,11 +78,11 @@ namespace SparrowStudios.Fivem.ssDrones.Client
 
             ScaleformUtils.PopInt(drone.DroneScaleform, "SET_ZOOM", 0);
 
-            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 0, "DRONE_ZOOM_1");
-            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 1, "");
-            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 2, "DRONE_ZOOM_2");
-            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 3, "");
-            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 4, "DRONE_ZOOM_3");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 0, "x1");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 1, "x2");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 2, "x4");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 3, "x8");
+            ScaleformUtils.PopMulti(drone.DroneScaleform, "SET_ZOOM_LABEL", 4, "x16");
 
             // Set & play the sounds from the drone
             drone.SoundId = GetSoundId();
@@ -471,78 +469,5 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             return scaleform;
         }
         #endregion
-
-        #region Hud Functions
-        /// <summary>
-        /// Draw text on the screen at the provided x and y locations.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="xPosition">The x position for the text draw origin.</param>
-        /// <param name="yPosition">The y position for the text draw origin.</param>
-        public static void DrawTextOnScreen(string text, float xPosition, float yPosition) =>
-            DrawTextOnScreen(text, xPosition, yPosition, size: 0.48f);
-
-        /// <summary>
-        /// Draw text on the screen at the provided x and y locations.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="xPosition">The x position for the text draw origin.</param>
-        /// <param name="yPosition">The y position for the text draw origin.</param>
-        /// <param name="size">The size of the text.</param>
-        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size) =>
-            DrawTextOnScreen(text, xPosition, yPosition, size, CitizenFX.Core.UI.Alignment.Left);
-
-        /// <summary>
-        /// Draw text on the screen at the provided x and y locations.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="xPosition">The x position for the text draw origin.</param>
-        /// <param name="yPosition">The y position for the text draw origin.</param>
-        /// <param name="size">The size of the text.</param>
-        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
-        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification) =>
-            DrawTextOnScreen(text, xPosition, yPosition, size, justification, 6);
-
-        /// <summary>
-        /// Draw text on the screen at the provided x and y locations.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="xPosition">The x position for the text draw origin.</param>
-        /// <param name="yPosition">The y position for the text draw origin.</param>
-        /// <param name="size">The size of the text.</param>
-        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
-        /// <param name="font">Specify the font to use (0-8).</param>
-        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification, int font) =>
-            DrawTextOnScreen(text, xPosition, yPosition, size, justification, font, false);
-
-        /// <summary>
-        /// Draw text on the screen at the provided x and y locations.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="xPosition">The x position for the text draw origin.</param>
-        /// <param name="yPosition">The y position for the text draw origin.</param>
-        /// <param name="size">The size of the text.</param>
-        /// <param name="justification">Align the text. 0: center, 1: left, 2: right</param>
-        /// <param name="font">Specify the font to use (0-8).</param>
-        /// <param name="disableTextOutline">Disables the default text outline.</param>
-        public static void DrawTextOnScreen(string text, float xPosition, float yPosition, float size, CitizenFX.Core.UI.Alignment justification, int font, bool disableTextOutline)
-        {
-            if (IsHudPreferenceSwitchedOn() && !IsPlayerSwitchInProgress() && IsScreenFadedIn() && !IsPauseMenuActive() && !IsFrontendFading() && !IsPauseMenuRestarting() && !IsHudHidden())
-            {
-                SetTextFont(font);
-                SetTextScale(1.0f, size);
-                if (justification == CitizenFX.Core.UI.Alignment.Right)
-                {
-                    SetTextWrap(0f, xPosition);
-                }
-                SetTextJustification((int)justification);
-                if (!disableTextOutline) { SetTextOutline(); }
-                BeginTextCommandDisplayText("STRING");
-                AddTextComponentSubstringPlayerName(text);
-                EndTextCommandDisplayText(xPosition, yPosition);
-            }
-        }
-        #endregion
-
     }
 }

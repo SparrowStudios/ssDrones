@@ -41,6 +41,16 @@ namespace SparrowStudios.Fivem.ssDrones
                 .SetAgility(1.0f)
                 .SetRange(250.0f)
                 .Build();
+
+            public static Drone SportDrone = new DroneBuilder()
+                .SetName("Sport Drone")
+                .SetModel("ch_prop_casino_drone_02a")
+                .EnableInfared()
+                .EnableNightVision()
+                .SetSpeed(5.0f)
+                .SetAgility(10.0f)
+                .SetRange(500.0f)
+                .Build();
         }
 
         public static class Controls
