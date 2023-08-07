@@ -17,10 +17,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-      run: echo "$GITHUB_CONTEXT"
     - name: Checkout
       uses: actions/checkout@v3
     - name: Setup .NET Core
@@ -35,6 +31,7 @@ jobs:
     
 
   deploy-dev:
+    needs: build
     if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
     runs-on: self-hosted
 
