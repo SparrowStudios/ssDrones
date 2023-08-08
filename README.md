@@ -21,6 +21,9 @@ Equiped with simple to use controls and features such as nightvision and infared
 # Discord
 Join [our Discord server](https://discord.gg/FTYjcbkzFn) for quick communication with the team and for support.
 
+# Credits
+Inspiration, some code snippets, & scaleform UI from https://github.com/FivemScripts2022/qb-drone
+
 # License
 This project uses the **Mozilla Public License 2.0**
 <br>
