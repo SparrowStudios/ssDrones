@@ -31,11 +31,17 @@ jobs:
     - name: Build with dotnet
       run: dotnet build
 
+    - name: Copy Misc Files
+      run: |
+        Copy-Item "${{ github.workspace }}/license" -Destination "${{ github.workspace }}/bld/${{ env.script-name }}"
+        Copy-Item "${{ github.workspace }}/README.md" -Destination "${{ github.workspace }}/bld/${{ env.script-name }}"
+
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3
       with:
         name: script-deploy-${{ env.script-name }}
         path: ${{ github.workspace }}\bld
+        retention-days: 1
 
 
   deploy-dev:
@@ -44,9 +50,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
     - name: Download Build Artifact
       uses: actions/download-artifact@v3
       with:
@@ -70,9 +73,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
     - name: Download Build Artifact
       uses: actions/download-artifact@v3
       with:

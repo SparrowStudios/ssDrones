@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  script-name: ssDrones
+
 jobs:
   add-release-asset:
     runs-on: self-hosted
@@ -17,6 +20,26 @@ jobs:
     
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 7.0.306
+
+    - name: Build with dotnet
+      run: dotnet build
+
+    - name: Copy Misc Files
+      run: |
+        Copy-Item "${{ github.workspace }}\license" -Destination "${{ github.workspace }}\bld\${{ env.script-name }}"
+        Copy-Item "${{ github.workspace }}\README.md" -Destination "${{ github.workspace }}\bld\${{ env.script-name }}"
       
-    - name: Release
-      uses: softprops/action-gh-release@v1
+    - name: Create Archives
+      run: |
+        tar -cvzf ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.tgz ${{ github.workspace }}\bld
+        Compress-Archive -Path ${{ github.workspace }}\bld -DestinationPath ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.zip
+
+    - name: Upload Release Assets
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release upload ${{ github.ref_name }} test_archive.zip
