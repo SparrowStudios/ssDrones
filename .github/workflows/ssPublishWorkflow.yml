@@ -36,6 +36,7 @@ jobs:
       
     - name: Create Archives
       run: |
+        New-Item -Path "${{ github.workspace }}\" -Name "release-assets" -ItemType "directory" 
         tar -cvzf ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.tgz ${{ github.workspace }}\bld
         Compress-Archive -Path ${{ github.workspace }}\bld -DestinationPath ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.zip
 
