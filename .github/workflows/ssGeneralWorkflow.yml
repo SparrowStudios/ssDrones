@@ -12,6 +12,9 @@ on:
       - "develop"
       - "feature/**"
 
+env:
+  script-name: ssDrones
+
 jobs:
   build:
     runs-on: self-hosted
@@ -19,18 +22,68 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 7.0.306
+
     - name: Build with dotnet
       run: dotnet build
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: script-deploy-${{ env.script-name }}
+        path: ${{ github.workspace }}\bld
+
+
+  deploy-dev:
+    needs: build
+    if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: script-deploy-${{ env.script-name }}
+        path: ${{ github.workspace }}\bld
+
     - name: Deploy to dev server
-      if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master') || (github.base_ref == 'develop' || github.ref == 'refs/heads/develop')) }}
       uses: garygrossgarten/github-action-scp@release
       with:
         local: ${{ github.workspace }}\bld
         remote: C:\fivem-server\txData\developmentServer1\resources\[dev-scripts]
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+
+
+
+  deploy-demo:
+    needs: build
+    if: ${{ github.event_name == 'push' && ((github.base_ref == 'master' || github.ref == 'refs/heads/master')) }}
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: script-deploy-${{ env.script-name }}
+        path: ${{ github.workspace }}\bld
+
+    - name: Deploy to dev server
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: ${{ github.workspace }}\bld
+        remote: C:\fivem-server\txData\demoServer\resources\[dev-scripts]
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}

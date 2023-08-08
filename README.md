@@ -3,25 +3,26 @@
 </p>
 <p align="center">
     <a href="https://github.com/badges/shields/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/SparrowStudios/template-repo" />
+        <img src="https://img.shields.io/github/contributors/SparrowStudios/ssDrones" />
     </a>
     <a href="./license" alt="License">
-        <img src="https://img.shields.io/github/license/SparrowStudios/template-repo" />
+        <img src="https://img.shields.io/github/license/SparrowStudios/ssDrones" />
     </a>
     <a href="https://discord.gg/FTYjcbkzFn" alt="Discord">
         <img src="https://img.shields.io/discord/1116847034863984730?label=Discord&logo=Discord" />
     </a>
 </p>
 
-# template-repo
-A template repository for SparrowStudios projects
+# ssDrones
+A working and controllable drone for FiveM servers!
 
-# Notes
-This resource uses experimental Mono v2 (https://github.com/thorium-cfx/mono_v2_get_started)
-This resource uses experimental FxEvents (https://github.com/manups4e/FxEvents)
+Equiped with simple to use controls and features such as nightvision and infared.
 
 # Discord
 Join [our Discord server](https://discord.gg/FTYjcbkzFn) for quick communication with the team and for support.
+
+# Credits
+Inspiration, some code snippets, & scaleform UI from https://github.com/FivemScripts2022/qb-drone
 
 # License
 This project uses the **Mozilla Public License 2.0**
