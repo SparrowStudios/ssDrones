@@ -1,8 +1,17 @@
-﻿using CitizenFX.Core;
-using static CitizenFX.Core.Native.API;
+﻿// ssDrones (https://github.com/SparrowStudios/ssDrones)
+// Author: Jacob Paulin (JayPaulinCodes)
+// Created: Jul 29 2023
+// Updated: Aug 7 2023
+// 
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using CitizenFX.Core;
+using SparrowStudios.Fivem.ssDrones.Models;
 using System;
 using System.Threading.Tasks;
-using SparrowStudios.Fivem.ssDrones.Models;
+using static CitizenFX.Core.Native.API;
 
 namespace SparrowStudios.Fivem.ssDrones.Client
 {
@@ -35,6 +44,15 @@ namespace SparrowStudios.Fivem.ssDrones.Client
         public static string GetStreetAndCrossWholeAtEntityPosition(this Entity e, string separator) => GetStreetAndCrossWholeAtCoords(e.Position, separator);
 
         /// <summary>
+        /// This function should be called when the client wants/needs to network a network ID.
+        /// </summary>
+        public static void SetNetworkIdNetworked(int netId)
+        {
+            SetNetworkIdExistsOnAllMachines(netId, true);
+            SetNetworkIdCanMigrate(netId, true);
+        }
+
+        /// <summary>
         /// Sets the specified entity as networked so it may be controlled by any client, not just the host.
         /// <param name="canMigrate">If the entity's control can move between clients.</param>
         /// </summary>
@@ -54,7 +72,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             }
 
             int netId = e.NetworkId;
-            SSClientScript.SetNetworkIdNetworked(netId);
+            SetNetworkIdNetworked(netId);
 
             Debug.WriteLine($"Got network ID {netId} from entity ID {e.Handle}");
         }
@@ -197,7 +215,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             return droneObj;
         }
 
-        public static async Task<Camera> CreateCamera(this Drone drone)
+        public static Camera CreateCamera(this Drone drone)
         {
             // Create camera
             int _camera = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 50.0f, false, 0);

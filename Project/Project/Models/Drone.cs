@@ -1,4 +1,13 @@
-﻿using Microsoft.SqlServer.Server;
+﻿// ssDrones (https://github.com/SparrowStudios/ssDrones)
+// Author: Jacob Paulin (JayPaulinCodes)
+// Created: Jul 29 2023
+// Updated: Aug 7 2023
+// 
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +19,11 @@ namespace SparrowStudios.Fivem.ssDrones.Models
     public class Drone
     {
         #region Properties
+        /// <summary>
+        /// The name of the drone
+        /// </summary>
+        public string Name { get; set; } = "Basit Drone";
+
         /// <summary>
         /// The model name of the drone
         /// </summary>
@@ -45,7 +59,8 @@ namespace SparrowStudios.Fivem.ssDrones.Models
         public int NetId { get; set; }
         public int SoundId { get; set; }
         public int Camera { get; set; }
-        public int Scaleform { get; set; }
+        public int DroneScaleform { get; set; }
+        public int ControlsScaleform { get; set; }
         #endregion
     }
 }
