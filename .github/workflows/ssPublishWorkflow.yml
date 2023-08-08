@@ -11,6 +11,8 @@ env:
 jobs:
   add-release-asset:
     runs-on: self-hosted
+    permissions:
+      contents: write
     
     steps:
     - name: Dump GitHub context
