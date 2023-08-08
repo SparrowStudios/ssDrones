@@ -38,13 +38,11 @@ jobs:
       
     - name: Create Archives
       run: |
-        New-Item -Path "${{ github.workspace }}\" -Name "release-assets" -ItemType "directory" 
-        tar -cvzf ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.tgz ${{ github.workspace }}\bld
-        Compress-Archive -Path ${{ github.workspace }}\bld -DestinationPath ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.zip
+        New-Item -Path "${{ github.workspace }}\" -Name "release-assets" -ItemType "directory"
+        Compress-Archive -Path ${{ github.workspace }}\bld\* -DestinationPath ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.zip
 
     - name: Upload Release Assets
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release upload ${{ github.ref_name }} ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.tgz
         gh release upload ${{ github.ref_name }} ${{ github.workspace }}\release-assets\${{ env.script-name }}-${{ github.ref_name }}.zip
