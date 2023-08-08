@@ -38,7 +38,8 @@ namespace SparrowStudios.Fivem.ssDrones
         {
             public static readonly IList<Drone> List = new List<Drone>()
             {
-                BasitDrone
+                BasitDrone,
+                SportDrone
             };
 
             public static Drone BasitDrone = new DroneBuilder()
