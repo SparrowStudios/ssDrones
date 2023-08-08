@@ -20,31 +20,25 @@ namespace SparrowStudios.Fivem.ssDrones.Client
     public class Client : BaseScript
     {
         #region Variables
-        public static Player ClientPlayer => Game.Player;
         public static Ped ClientPed => Game.PlayerPed;
         public Drone CurrentDrone;
         public int TabletObj;
-        #endregion
-
-        public Client()
-        {
-
-        }
-
-        #region Ticks
         #endregion
 
         #region Event Handlers
         [EventHandler(Events.Client.DRONE_COMMAND)]
         private void OnEventDroneCommand(string droneName)
         {
+            // Define the default drone
             Drone targetDrone = Drones.BasitDrone;
 
+            // Search for the specified drone
             if (!string.IsNullOrEmpty(droneName) && Drones.List.FirstOrDefault(_drone => _drone.Name == droneName) != null) 
             { 
                 targetDrone = Drones.List.FirstOrDefault(_drone => _drone.Name == droneName);
             }
 
+            // Spawn the drone
             _ = SpawnDrone(targetDrone);
         }
         #endregion
@@ -62,14 +56,14 @@ namespace SparrowStudios.Fivem.ssDrones.Client
             Entity droneObj = await drone.CreateObject(ClientPed.Position);
             drone.Handle = droneObj.Handle;
             drone.NetId = droneObj.NetworkId;
+            droneObj = null;
 
             // Create the camera
-            Camera droneCam = drone.CreateCamera();
-            drone.Camera = droneCam.Handle;
+            drone.Camera = drone.CreateCamera().Handle;
 
             // Setup on the drone object
-            SetEntityAsMissionEntity(droneObj.Handle, true, true);
-            SetObjectPhysicsParams(droneObj.Handle, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+            SetEntityAsMissionEntity(drone.Handle, true, true);
+            SetObjectPhysicsParams(drone.Handle, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
             // Scaleform stuffzz here
             drone.ControlsScaleform = await GenerateControlsScaleform();
@@ -96,7 +90,7 @@ namespace SparrowStudios.Fivem.ssDrones.Client
 
             // Set & play the sounds from the drone
             drone.SoundId = GetSoundId();
-            PlaySoundFromEntity(drone.SoundId, "Flight_Loop", droneObj.Handle, "DLC_BTL_Drone_Sounds", true, 0);
+            PlaySoundFromEntity(drone.SoundId, "Flight_Loop", drone.Handle, "DLC_BTL_Drone_Sounds", true, 0);
 
             // Fade the screen back in
             DoScreenFadeIn(500);
