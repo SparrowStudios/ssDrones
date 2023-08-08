@@ -12,7 +12,7 @@ games { 'gta5' }
 
 author 'SparrowStudios'
 description 'A FiveM Drone Script'
-version '1.0.0'
+version '1.0.1'
 
 shared_scripts {
 	'ssDrones.net.dll'
